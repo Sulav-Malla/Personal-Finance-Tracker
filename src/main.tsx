@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/home";
 import { Dashboard } from "./pages/dashboard";
 import { Expenses } from "./pages/expenses";
 import { Income } from "./pages/income";
@@ -14,8 +13,8 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<NavLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route index element={<Dashboard />} />
+
           <Route path="/expenses" element={<Expenses />} />
           <Route path="/manage-income" element={<Income />} />
           <Route path="/savings-goal" element={<Savings />} />

@@ -1,6 +1,5 @@
 {
   "name": "personal-finance-tracker",
-  "homepage": "https://sulav-malla.github.io/Personal-Finance-Tracker",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -14,8 +13,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1"
   },
   "devDependencies": {

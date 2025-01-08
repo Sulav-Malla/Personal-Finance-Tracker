@@ -8,14 +8,6 @@ export function NavLayout() {
           <ul className="flex justify-center space-x-6">
             <li>
               <Link
-                to="/"
-                className="hover:text-yellow-500 transition duration-300"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/dashboard"
                 className="hover:text-yellow-500 transition duration-300"
               >
