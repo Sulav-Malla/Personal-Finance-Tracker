@@ -22,6 +22,8 @@ interface ITransaction {
   amount: number;
   type: string;
   category: string;
+  date: string;
+  status: string;
 }
 
 interface IDashboard {
@@ -63,6 +65,8 @@ const initialState: IDashboard = {
       amount: 50,
       type: "Expense",
       category: "Food",
+      date: "2025-01-12",
+      status: "Completed",
     },
     {
       id: 2,
@@ -70,6 +74,8 @@ const initialState: IDashboard = {
       amount: 3000,
       type: "Deposit",
       category: "Salary",
+      date: "2025-01-11",
+      status: "Completed",
     },
     {
       id: 3,
@@ -77,6 +83,8 @@ const initialState: IDashboard = {
       amount: 1000,
       type: "Expense",
       category: "Rent",
+      date: "2025-01-10",
+      status: "Pending",
     },
   ],
 };

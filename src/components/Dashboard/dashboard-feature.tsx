@@ -267,19 +267,31 @@ function DashboardFeature() {
           </div>
           <ul className="mt-4">
             {dashboard.recentTransactions.map((transaction, index) => (
-              <li key={index} className="text-lg mb-2 flex justify-between">
-                <span>{transaction.description}</span>
-                <span
-                  className={
-                    transaction.category === "Salary" ||
-                    transaction.category === "Freelance" ||
-                    transaction.category === "Investments"
-                      ? "text-green-900"
-                      : "text-red-900"
-                  }
-                >
-                  ${transaction.amount}
-                </span>
+              <li key={index} className="text-lg mb-4">
+                <div className="flex justify-between">
+                  <span>{transaction.description}</span>
+                  <span
+                    className={
+                      transaction.type === "Deposit"
+                        ? "text-green-900"
+                        : "text-red-900"
+                    }
+                  >
+                    ${transaction.amount}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600 mt-1 flex justify-between">
+                  <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                  <span
+                    className={
+                      transaction.status === "Completed"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }
+                  >
+                    {transaction.status}
+                  </span>
+                </div>
               </li>
             ))}
           </ul>
