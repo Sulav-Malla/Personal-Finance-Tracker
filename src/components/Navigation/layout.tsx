@@ -8,7 +8,10 @@ export function NavLayout() {
   return (
     <div className="flex min-h-screen">
       {/* Side nav */}
-      <div className="bg-gray-800 text-white w-48 flex flex-col items-center">
+      <div
+        className="bg-gray-800 text-white w-48 h-screen fixed flex flex-col items-center"
+        style={{ top: 0 }}
+      >
         <nav className="py-4">
           <ul className="flex flex-col space-y-4">
             <li>
@@ -68,7 +71,7 @@ export function NavLayout() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 bg-gray-100 p-0">
+      <main className="flex-1 bg-gray-100 p-0 ml-48">
         <Outlet />
       </main>
     </div>

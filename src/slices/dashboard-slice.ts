@@ -16,6 +16,14 @@ interface ISavingGoal {
   contributed: number;
 }
 
+interface ITransaction {
+  id: number;
+  description: string;
+  amount: number;
+  type: string;
+  category: string;
+}
+
 interface IDashboard {
   totalIncome: number;
   incomeSources: IIncomeSource[];
@@ -25,6 +33,7 @@ interface IDashboard {
   totalSavings: number;
   savingGoals: ISavingGoal[];
   averageMonthlyContribution: number;
+  recentTransactions: ITransaction[];
 }
 
 const initialState: IDashboard = {
@@ -47,6 +56,29 @@ const initialState: IDashboard = {
     { goal: "Vacation", amount: 2000, contributed: 500 },
   ],
   averageMonthlyContribution: 300,
+  recentTransactions: [
+    {
+      id: 1,
+      description: "Walmart Food Purchase",
+      amount: 50,
+      type: "Expense",
+      category: "Food",
+    },
+    {
+      id: 2,
+      description: "Salary Deposit",
+      amount: 3000,
+      type: "Deposit",
+      category: "Salary",
+    },
+    {
+      id: 3,
+      description: "Rent Payment",
+      amount: 1000,
+      type: "Expense",
+      category: "Rent",
+    },
+  ],
 };
 
 const dashboardSlice = createSlice({
@@ -77,6 +109,9 @@ const dashboardSlice = createSlice({
     setAverageMonthlyContribution(state, action: PayloadAction<number>) {
       state.averageMonthlyContribution = action.payload;
     },
+    setRecentTransactions(state, action: PayloadAction<ITransaction[]>) {
+      state.recentTransactions = action.payload;
+    },
   },
 });
 
@@ -89,5 +124,6 @@ export const {
   setTotalSavings,
   setSavingGoals,
   setAverageMonthlyContribution,
+  setRecentTransactions,
 } = dashboardSlice.actions;
 export default dashboardSlice.reducer;
