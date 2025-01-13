@@ -257,37 +257,34 @@ function DashboardFeature() {
         </div>
         {/* Recent Transactions */}
         <div className="bg-[#FFB800] w-[540px] h-[300px] rounded-[30px] m-1 p-4">
-          {" "}
           <div className="flex items-center">
-            {" "}
             <img
               src={depositIcon}
               alt="Recent Transactions"
               className="w-10 h-10 mr-2"
-            />{" "}
-            <h2 className="text-2xl font-bold">Recent Transactions</h2>{" "}
-          </div>{" "}
+            />
+            <h2 className="text-2xl font-bold">Recent Transactions</h2>
+          </div>
           <ul className="mt-4">
-            {" "}
             {dashboard.recentTransactions.map((transaction, index) => (
               <li key={index} className="text-lg mb-2 flex justify-between">
-                {" "}
-                <span>{transaction.description}</span>{" "}
+                <span>{transaction.description}</span>
                 <span
                   className={
-                    transaction.type === "income"
-                      ? "text-green-500"
-                      : "text-red-500"
+                    transaction.category === "Salary" ||
+                    transaction.category === "Freelance" ||
+                    transaction.category === "Investments"
+                      ? "text-green-900"
+                      : "text-red-900"
                   }
                 >
-                  {" "}
-                  ${transaction.amount}{" "}
-                </span>{" "}
+                  ${transaction.amount}
+                </span>
               </li>
-            ))}{" "}
-          </ul>{" "}
-        </div>{" "}
-      </div>{" "}
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
