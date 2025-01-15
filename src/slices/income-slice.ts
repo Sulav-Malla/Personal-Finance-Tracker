@@ -11,7 +11,7 @@ interface IIncomeHistory {
   id: string;
   date: string;
   amount: number;
-  sourceId: string;
+  type: string;
 }
 
 interface IIncomeState {
@@ -34,9 +34,9 @@ const initialState: IIncomeState = {
     { id: "3", type: "Investments", amount: 500, recurring: true },
   ],
   incomeHistory: [
-    { id: "1", date: "2023-10-01", amount: 3000, sourceId: "1" },
-    { id: "2", date: "2023-10-15", amount: 1500, sourceId: "2" },
-    { id: "3", date: "2023-10-20", amount: 500, sourceId: "3" },
+    { id: "1", date: "2023-10-01", amount: 3000, type: "Salary" },
+    { id: "2", date: "2023-10-15", amount: 1500, type: "Freelance" },
+    { id: "3", date: "2023-10-20", amount: 500, type: "Investments" },
   ],
 };
 
@@ -58,14 +58,14 @@ const incomeSlice = createSlice({
         (source) => source.id !== action.payload
       );
       state.incomeHistory = state.incomeHistory.filter(
-        (history) => history.sourceId !== action.payload
+        (history) => history.type !== action.payload
       );
     },
     addIncomeHistory(state, action: PayloadAction<IIncomeHistory>) {
       state.incomeHistory.push(action.payload);
       state.totalIncome += action.payload.amount;
       const source = state.incomeSources.find(
-        (source) => source.id === action.payload.sourceId
+        (source) => source.type === action.payload.type
       );
       if (source) {
         source.amount += action.payload.amount;
@@ -81,7 +81,7 @@ const incomeSlice = createSlice({
           (history) => history.id !== action.payload
         );
         const source = state.incomeSources.find(
-          (source) => source.id === historyToRemove.sourceId
+          (source) => source.type === historyToRemove.type
         );
         if (source) {
           source.amount -= historyToRemove.amount;

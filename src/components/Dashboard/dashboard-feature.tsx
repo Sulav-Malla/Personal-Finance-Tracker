@@ -1,4 +1,3 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { Pie } from "react-chartjs-2";
@@ -10,29 +9,29 @@ import {
   ArcElement,
   CategoryScale,
 } from "chart.js";
-import freelanceSource from "../../assets/freelance-source.svg";
-import salarySource from "../../assets/salary-source.svg";
-import investSource from "../../assets/invest-source.svg";
-import giftSource from "../../assets/gift-source.svg";
-import totalIncome from "../../assets/total-income.svg";
-import differentSources from "../../assets/different-sources.svg";
-import generalSource from "../../assets/general-source.svg";
-import rentExpense from "../../assets/rent-expense.svg";
-import groceryExpense from "../../assets/grocery-expense.svg";
-import entertainmentExpense from "../../assets/entertain-expense.svg";
-import totalExpense from "../../assets/total-expense.svg";
-
-import goalOneIcon from "../../assets/goal-one-icon.svg";
-import goalTwoIcon from "../../assets/goal-two-icon.svg";
-import savingsProgress from "../../assets/saving-progress.svg";
-import depositIcon from "../../assets/deposit-icon.svg";
-import totalSavings from "../../assets/possible-savings-icon.svg";
-import equalIcon from "../../assets/equal-icon.svg";
+import {
+  freelanceSource,
+  salarySource,
+  investSource,
+  giftSource,
+  totalIncome,
+  differentSources,
+  generalSource,
+  rentExpense,
+  groceryExpense,
+  entertainmentExpense,
+  totalExpense,
+  goalOneIcon,
+  goalTwoIcon,
+  savingsProgress,
+  depositIcon,
+  totalSavings,
+  equalIcon,
+} from "../../assets/dashAssets";
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 
 function DashboardFeature() {
-  const dashboard = useSelector((state: RootState) => state.dashboard);
   const income = useSelector((state: RootState) => state.income);
   const expenses = useSelector((state: RootState) => state.expenses);
   const savings = useSelector((state: RootState) => state.savings);
@@ -110,6 +109,19 @@ function DashboardFeature() {
   const calculateProgress = (currentAmount: number, targetAmount: number) => {
     return (currentAmount / targetAmount) * 100;
   };
+
+  const recentTransactions = [
+    ...income.incomeHistory.map((item) => ({
+      ...item,
+      types: "Income",
+    })),
+    ...expenses.history.map((item) => ({
+      ...item,
+      types: "Expense",
+    })),
+  ]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 5);
 
   return (
     <div>
@@ -314,30 +326,30 @@ function DashboardFeature() {
             </h2>
           </div>
           <ul className="mt-4 font-[Roboto]">
-            {dashboard.recentTransactions.map((transaction, index) => (
+            {recentTransactions.map((transaction, index) => (
               <li key={index} className="text-lg mb-4">
                 <div className="flex justify-between">
-                  <span>{transaction.description}</span>
+                  <span>
+                    {transaction.types === "Income"
+                      ? `${transaction.date} - ${
+                          "type" in transaction
+                            ? transaction.type
+                            : transaction.category
+                        }`
+                      : `${transaction.date} - ${
+                          "description" in transaction
+                            ? transaction.category
+                            : ""
+                        }`}
+                  </span>
                   <span
                     className={
-                      transaction.type === "Deposit"
+                      transaction.types === "Income"
                         ? "text-green-900"
                         : "text-red-900"
                     }
                   >
                     ${transaction.amount}
-                  </span>
-                </div>
-                <div className="text-sm text-black-600 mt-1 flex justify-between">
-                  <span>{new Date(transaction.date).toLocaleDateString()}</span>
-                  <span
-                    className={
-                      transaction.status === "Completed"
-                        ? "text-green-900"
-                        : "text-yellow-900"
-                    }
-                  >
-                    {transaction.status}
                   </span>
                 </div>
               </li>

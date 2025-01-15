@@ -9,14 +9,17 @@ import {
   updateRemainingFunds,
   editSavingsGoal,
 } from "../../slices/savings-slice";
-import targetDateIcon from "../../assets/target-date-icon.svg";
-import timeLeftIcon from "../../assets/time-left-icon.svg";
-import currentAmountIcon from "../../assets/current-amount-icon.svg";
-import targetAmountIcon from "../../assets/target-amount-icon.svg";
-import goalNameIcon from "../../assets/goal-name-icon.svg";
-import remainingFundsIcon from "../../assets/remaining-funds-icon.svg";
-import deleteIcon from "../../assets/delete-icon.svg";
-import editIcon from "../../assets/edit-icon.svg";
+
+import {
+  editIcon,
+  deleteIcon,
+  targetDateIcon,
+  currentAmountIcon,
+  remainingFundsIcon,
+  goalNameIcon,
+  targetAmountIcon,
+  timeLeftIcon,
+} from "../../assets/savingAssets";
 
 interface ISavingsGoal {
   id: string;
@@ -40,12 +43,6 @@ function SavingsManagement() {
     (state: RootState) => state.savings.remainingFunds
   );
 
-  // useEffect(() => {
-  //   if (remainingFunds === 0 && !hasFundData) {
-  //     dispatch(setRemainingFunds(totalIncome - totalExpense));
-  //     setFundDataStatus(true);
-  //   }
-  // }, []);
   useEffect(() => {
     if (!savings.isInitialized) {
       const calculatedFunds = totalIncome - totalExpense;

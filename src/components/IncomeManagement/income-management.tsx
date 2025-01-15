@@ -7,9 +7,8 @@ import {
   addIncomeHistory,
   removeIncomeHistory,
 } from "../../slices/income-slice";
-import historyIcon from "../../assets/history-icon.svg";
-import deleteIcon from "../../assets/delete-icon.svg";
-import addIcon from "../../assets/add-icon.svg";
+
+import { historyIcon, deleteIcon, addIcon } from "../../assets/featureIcons";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -23,15 +22,19 @@ import {
   ArcElement,
 } from "chart.js";
 import monthIcons from "../../assets/monthIcons";
-import firstMedalIcon from "../../assets/first-medal-icon.svg";
-import secondMedalIcon from "../../assets/second-medal-icon.svg";
-import thirdMedalIcon from "../../assets/third-medal-icon.svg";
-import otherMedalIcon from "../../assets/other-medal-icon.svg";
-import pointIcon from "../../assets/point-icon.svg";
-import investSource from "../../assets/invest-source.svg";
-import salarySource from "../../assets/salary-source.svg";
-import freelanceSource from "../../assets/freelance-source.svg";
-import generalSource from "../../assets/general-source.svg";
+import {
+  firstMedalIcon,
+  secondMedalIcon,
+  thirdMedalIcon,
+  otherMedalIcon,
+} from "../../assets/medalIcons";
+import {
+  pointIcon,
+  investSource,
+  salarySource,
+  freelanceSource,
+  generalSource,
+} from "../../assets/incomeAssets";
 import {
   updateRemainingFunds,
   addToRemainingFunds,
@@ -62,7 +65,7 @@ function IncomeManagement() {
   const [newIncomeHistory, setNewIncomeHistory] = useState({
     date: "",
     amount: 0,
-    sourceId: "",
+    type: "",
   });
 
   const handleAddIncomeSource = () => {
@@ -87,18 +90,18 @@ function IncomeManagement() {
     dispatch(removeIncomeSource(id));
   };
 
-  const handleAddIncomeHistory = (sourceId: string) => {
+  const handleAddIncomeHistory = (type: string) => {
     const newHistory = {
       id: Date.now().toString(),
       ...newIncomeHistory,
-      sourceId,
+      type,
     };
     dispatch(addIncomeHistory(newHistory));
     dispatch(addToRemainingFunds(newHistory.amount));
     setNewIncomeHistory({
       date: "",
       amount: 0,
-      sourceId: "",
+      type: "",
     });
   };
 
@@ -344,7 +347,7 @@ function IncomeManagement() {
                       alt={`${source.type} Icon`}
                       className="w-6 h-6 mr-10"
                     />
-                    {source.type}: ~${source.amount} (
+                    {source.type}: ${source.amount} (
                     {source.recurring ? "Recurring" : "One-time"} )
                   </span>
                   <div className="flex items-center">
@@ -381,7 +384,7 @@ function IncomeManagement() {
                     </h3>
                     <ul>
                       {income.incomeHistory
-                        .filter((history) => history.sourceId === source.id)
+                        .filter((history) => history.type === source.type)
                         .map((history) => (
                           <li
                             key={history.id}
@@ -416,7 +419,7 @@ function IncomeManagement() {
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();
-                        handleAddIncomeHistory(source.id);
+                        handleAddIncomeHistory(source.type);
                       }}
                       className="mt-4"
                     >

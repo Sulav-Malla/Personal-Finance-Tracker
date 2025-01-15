@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface IExpenseCategory {
-  id: string;
-  type: string;
-  amount: number;
-  recurring: boolean;
-}
-
 interface IExpense {
   id: number;
   date: string;

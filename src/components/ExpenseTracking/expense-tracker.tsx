@@ -22,23 +22,27 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import deleteIcon from "../../assets/delete-icon.svg";
-import historyIcon from "../../assets/history-icon.svg";
-import addIcon from "../../assets/add-icon.svg";
-import showAllIcon from "../../assets/showall-icon.svg";
-import collapseIcon from "../../assets/collapse-icon.svg";
+
+import { historyIcon, deleteIcon, addIcon } from "../../assets/featureIcons";
+
+import {
+  transportationIcon,
+  pointIcon,
+  showAllIcon,
+  collapseIcon,
+  homeInsuranceIcon,
+  utilitiesIcon,
+  rentExpense,
+  groceryExpense,
+  entertainExpense,
+} from "../../assets/expenseAssets";
 import monthIcons from "../../assets/monthIcons";
-import firstMedalIcon from "../../assets/first-medal-icon.svg";
-import secondMedalIcon from "../../assets/second-medal-icon.svg";
-import thirdMedalIcon from "../../assets/third-medal-icon.svg";
-import otherMedalIcon from "../../assets/other-medal-icon.svg";
-import transportationIcon from "../../assets/transportation-icon.svg";
-import homeInsuranceIcon from "../../assets/home-insurance-icon.svg";
-import utilitiesIcon from "../../assets/utilities-icon.svg";
-import rentExpense from "../../assets/rent-expense.svg";
-import groceryExpense from "../../assets/grocery-expense.svg";
-import entertainExpense from "../../assets/entertain-expense.svg";
-import pointIcon from "../../assets/point-icon.svg";
+import {
+  firstMedalIcon,
+  secondMedalIcon,
+  thirdMedalIcon,
+  otherMedalIcon,
+} from "../../assets/medalIcons";
 
 ChartJS.register(
   CategoryScale,
