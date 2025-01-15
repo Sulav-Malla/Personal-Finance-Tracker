@@ -22,7 +22,7 @@ interface IIncomeState {
 }
 
 const initialState: IIncomeState = {
-  totalIncome: 5000,
+  totalIncome: 0,
   monthlyComparison: [
     { month: "January", amount: 4000 },
     { month: "February", amount: 4500 },
@@ -39,6 +39,11 @@ const initialState: IIncomeState = {
     { id: "3", date: "2023-10-20", amount: 500, sourceId: "3" },
   ],
 };
+
+initialState.totalIncome = initialState.incomeSources.reduce(
+  (total, source) => total + source.amount,
+  0
+);
 
 const incomeSlice = createSlice({
   name: "income",

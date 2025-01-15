@@ -138,8 +138,7 @@ const initialState: IExpenseState = {
       amount: 60,
     },
   ],
-
-  totalExpense: 4640,
+  totalExpense: 0,
   monthlyComparison: [
     { month: "January", amount: 5000 },
     { month: "February", amount: 4500 },
@@ -147,6 +146,11 @@ const initialState: IExpenseState = {
   ],
   filteredExpenses: [],
 };
+
+initialState.totalExpense = initialState.history.reduce(
+  (total, expense) => total + expense.amount,
+  0
+);
 
 const expenseSlice = createSlice({
   name: "expenses",

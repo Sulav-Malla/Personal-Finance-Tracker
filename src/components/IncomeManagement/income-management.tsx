@@ -32,6 +32,10 @@ import investSource from "../../assets/invest-source.svg";
 import salarySource from "../../assets/salary-source.svg";
 import freelanceSource from "../../assets/freelance-source.svg";
 import generalSource from "../../assets/general-source.svg";
+import {
+  updateRemainingFunds,
+  addToRemainingFunds,
+} from "../../slices/savings-slice";
 
 ChartJS.register(
   CategoryScale,
@@ -74,6 +78,7 @@ function IncomeManagement() {
       recurring: newSource.recurring,
     };
     dispatch(addIncomeSource(newIncomeSource));
+    dispatch(addToRemainingFunds(newIncomeSource.amount));
     setNewSource({ type: "", amount: 0, recurring: false });
     setShowForm(false);
   };
@@ -89,6 +94,7 @@ function IncomeManagement() {
       sourceId,
     };
     dispatch(addIncomeHistory(newHistory));
+    dispatch(addToRemainingFunds(newHistory.amount));
     setNewIncomeHistory({
       date: "",
       amount: 0,
@@ -96,8 +102,9 @@ function IncomeManagement() {
     });
   };
 
-  const handleRemoveIncomeHistory = (id: string) => {
+  const handleRemoveIncomeHistory = (id: string, amount: number) => {
     dispatch(removeIncomeHistory(id));
+    dispatch(updateRemainingFunds(amount));
   };
 
   // Pie chart data for Total Income
@@ -337,7 +344,7 @@ function IncomeManagement() {
                       alt={`${source.type} Icon`}
                       className="w-6 h-6 mr-10"
                     />
-                    {source.type}: ${source.amount} (
+                    {source.type}: ~${source.amount} (
                     {source.recurring ? "Recurring" : "One-time"} )
                   </span>
                   <div className="flex items-center">
@@ -391,7 +398,10 @@ function IncomeManagement() {
                             <button
                               className="text-white px-2 py-1 rounded"
                               onClick={() =>
-                                handleRemoveIncomeHistory(history.id)
+                                handleRemoveIncomeHistory(
+                                  history.id,
+                                  history.amount
+                                )
                               }
                             >
                               <img

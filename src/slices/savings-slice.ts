@@ -11,6 +11,7 @@ interface ISavingsGoal {
 interface ISavingsState {
   savingsGoals: ISavingsGoal[];
   remainingFunds: number;
+  isInitialized: boolean;
 }
 
 const initialState: ISavingsState = {
@@ -38,6 +39,7 @@ const initialState: ISavingsState = {
     },
   ],
   remainingFunds: 0,
+  isInitialized: false,
 };
 
 const savingsSlice = createSlice({
@@ -81,9 +83,13 @@ const savingsSlice = createSlice({
     },
     setRemainingFunds(state, action: PayloadAction<number>) {
       state.remainingFunds = action.payload;
+      state.isInitialized = true;
     },
     updateRemainingFunds(state, action: PayloadAction<number>) {
       state.remainingFunds -= action.payload;
+    },
+    addToRemainingFunds(state, action: PayloadAction<number>) {
+      state.remainingFunds += action.payload;
     },
   },
 });
@@ -95,5 +101,6 @@ export const {
   editSavingsGoal,
   setRemainingFunds,
   updateRemainingFunds,
+  addToRemainingFunds,
 } = savingsSlice.actions;
 export default savingsSlice.reducer;

@@ -28,6 +28,7 @@ interface ISavingsGoal {
 
 function SavingsManagement() {
   const dispatch = useDispatch();
+
   const savings = useSelector((state: RootState) => state.savings);
   const totalIncome = useSelector(
     (state: RootState) => state.income.totalIncome
@@ -39,11 +40,18 @@ function SavingsManagement() {
     (state: RootState) => state.savings.remainingFunds
   );
 
+  // useEffect(() => {
+  //   if (remainingFunds === 0 && !hasFundData) {
+  //     dispatch(setRemainingFunds(totalIncome - totalExpense));
+  //     setFundDataStatus(true);
+  //   }
+  // }, []);
   useEffect(() => {
-    if (remainingFunds === null || remainingFunds === undefined) {
-      dispatch(setRemainingFunds(totalIncome - totalExpense));
+    if (!savings.isInitialized) {
+      const calculatedFunds = totalIncome - totalExpense;
+      dispatch(setRemainingFunds(calculatedFunds));
     }
-  }, [totalIncome, totalExpense, remainingFunds, dispatch]);
+  }, [savings.isInitialized, totalIncome, totalExpense, dispatch]);
 
   const [showForm, setShowForm] = useState(false);
   const [editGoalId, setEditGoalId] = useState<string | null>(null);
@@ -120,6 +128,14 @@ function SavingsManagement() {
     return daysLeft > 0 ? `${daysLeft} days left` : "Target date passed";
   };
 
+  const calculateMonthlyContribution = (goal: ISavingsGoal) => {
+    const monthsLeft =
+      new Date(goal.targetDate).getMonth() - new Date().getMonth();
+    return monthsLeft > 0
+      ? (goal.currentAmount / monthsLeft).toFixed(2)
+      : "0.00";
+  };
+
   return (
     <div className="p-6 min-h-screen">
       <header className="text-3xl font-bold mb-6 text-gray-800 font-[Merriweather]">
@@ -133,7 +149,7 @@ function SavingsManagement() {
           className="w-8 h-8 mr-4"
         />
         <h2 className="text-3xl font-semibold text-blue-800 font-[Playfair]">
-          Remaining Funds: ${remainingFunds}
+          Remaining Funds: ${remainingFunds !== null ? remainingFunds : 0}
         </h2>
       </div>
 
@@ -192,9 +208,7 @@ function SavingsManagement() {
               </p>
             </div>
             <p className="text-lg font-[Roboto]">
-              Monthly Contribution: $
-              {goal.currentAmount /
-                (new Date(goal.targetDate).getMonth() - new Date().getMonth())}
+              Monthly Contribution: ${calculateMonthlyContribution(goal)}
             </p>
             <div className="absolute top-4 right-4 flex space-x-2">
               <button
@@ -250,36 +264,23 @@ function SavingsManagement() {
       {showForm && (
         <form
           onSubmit={handleFormSubmit}
-          className="bg-gray-50 mt-6 p-6 rounded shadow"
+          className="bg-gray-50 mt-6 p-6 rounded shadow-lg"
         >
-          <h3 className="text-lg font-semibold mb-2 font-[Playfair]">
-            {editGoalId ? "Edit Savings Goal" : "Add New Savings Goal"}
+          <h3 className="text-2xl font-semibold mb-6 text-gray-800 font-[Playfair]">
+            {editGoalId ? "Edit" : "Add"} Savings Goal
           </h3>
           <div className="mb-4">
-            <label className="block text-sm font-semibold flex items-center">
-              <img
-                src={goalNameIcon}
-                alt="Goal Name Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Goal Name
-            </label>
+            <label className="block text-lg font-[Roboto]">Goal Name</label>
             <input
               type="text"
               value={newGoal.name}
               onChange={(e) => setNewGoal({ ...newGoal, name: e.target.value })}
+              required
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold flex items-center">
-              <img
-                src={targetAmountIcon}
-                alt="Target Amount Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Target Amount
-            </label>
+            <label className="block text-lg font-[Roboto]">Target Amount</label>
             <input
               type="number"
               value={newGoal.targetAmount}
@@ -289,16 +290,12 @@ function SavingsManagement() {
                   targetAmount: parseFloat(e.target.value),
                 })
               }
+              required
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold flex items-center">
-              <img
-                src={currentAmountIcon}
-                alt="Current Amount Icon"
-                className="w-6 h-6 mr-2"
-              />
+            <label className="block text-lg font-[Roboto]">
               Current Amount
             </label>
             <input
@@ -310,42 +307,28 @@ function SavingsManagement() {
                   currentAmount: parseFloat(e.target.value),
                 })
               }
+              required
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold flex items-center">
-              <img
-                src={targetDateIcon}
-                alt="Target Date Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Target Date
-            </label>
+            <label className="block text-lg font-[Roboto]">Target Date</label>
             <input
               type="date"
               value={newGoal.targetDate}
               onChange={(e) =>
                 setNewGoal({ ...newGoal, targetDate: e.target.value })
               }
+              required
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              {editGoalId ? "Update" : "Add"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowForm(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            {editGoalId ? "Save Changes" : "Add Goal"}
+          </button>
         </form>
       )}
     </div>

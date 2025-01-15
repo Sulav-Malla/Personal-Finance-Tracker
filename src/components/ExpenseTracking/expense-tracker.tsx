@@ -6,6 +6,10 @@ import {
   addExpense,
   removeExpense,
 } from "../../slices/expense-slice";
+import {
+  updateRemainingFunds,
+  addToRemainingFunds,
+} from "../../slices/savings-slice";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -55,6 +59,7 @@ const categories = [
   "Groceries",
   "Entertainment",
 ];
+const paymentChoices = ["Credit Card", "Debit Card", "Cash"];
 
 function ExpenseManagement() {
   const dispatch = useDispatch();
@@ -64,7 +69,7 @@ function ExpenseManagement() {
   const [newExpense, setNewExpense] = useState({
     date: "",
     description: "",
-    paymentMethod: "",
+    paymentMethod: paymentChoices[0],
     category: categories[0],
     amount: 0,
   });
@@ -87,18 +92,20 @@ function ExpenseManagement() {
       ...newExpense,
     };
     dispatch(addExpense(newExpenseData));
+    dispatch(updateRemainingFunds(newExpenseData.amount));
     setNewExpense({
       date: "",
       description: "",
-      paymentMethod: "",
+      paymentMethod: paymentChoices[0],
       category: categories[0],
       amount: 0,
     });
     setShowForm(false);
   };
 
-  const handleRemoveExpense = (id: number) => {
+  const handleRemoveExpense = (id: number, amount: number) => {
     dispatch(removeExpense(id));
+    dispatch(addToRemainingFunds(amount));
   };
 
   // Calculate total amount spent per category
@@ -394,7 +401,9 @@ function ExpenseManagement() {
                             ${expense.amount}
                           </span>
                           <button
-                            onClick={() => handleRemoveExpense(expense.id)}
+                            onClick={() =>
+                              handleRemoveExpense(expense.id, expense.amount)
+                            }
                             className="text-white px-2 py-1 rounded"
                           >
                             <img
@@ -420,6 +429,8 @@ function ExpenseManagement() {
         </h2>
         <ul className="space-y-2 font-[Roboto]">
           {expenses.history
+            .slice()
+            .reverse()
             .slice(0, showAllHistory ? expenses.history.length : 5)
             .map((expense) => (
               <li key={expense.id} className="bg-gray-50 p-4 rounded shadow-sm">
@@ -430,7 +441,9 @@ function ExpenseManagement() {
                   <span>${expense.amount}</span>
                 </div>
                 <button
-                  onClick={() => handleRemoveExpense(expense.id)}
+                  onClick={() =>
+                    handleRemoveExpense(expense.id, expense.amount)
+                  }
                   className="text-white px-3 py-1 rounded mt-2"
                 >
                   <img src={deleteIcon} alt="Delete Icon" className="w-5 h-5" />
@@ -507,14 +520,19 @@ function ExpenseManagement() {
             <label className="block text-sm font-semibold">
               Payment Method
             </label>
-            <input
-              type="text"
-              value={newExpense.paymentMethod}
+            <select
+              value={newExpense.category}
               onChange={(e) =>
-                setNewExpense({ ...newExpense, paymentMethod: e.target.value })
+                setNewExpense({ ...newExpense, category: e.target.value })
               }
               className="border p-2 w-full rounded"
-            />
+            >
+              {paymentChoices.map((choice) => (
+                <option key={choice} value={choice}>
+                  {choice}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-4">
             <label className="block text-sm font-semibold">Category</label>
