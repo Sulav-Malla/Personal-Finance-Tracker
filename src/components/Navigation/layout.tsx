@@ -3,6 +3,7 @@ import dashboardIcon from "../../assets/dashboard.svg";
 import incomeIcon from "../../assets/dollar-sign.svg";
 import expenseIcon from "../../assets/expense.svg";
 import savingIcon from "../../assets/saving-goal.svg";
+import logo from "../../assets/finance-tracker-logo.svg";
 
 export function NavLayout() {
   return (
@@ -12,7 +13,13 @@ export function NavLayout() {
         className="bg-gray-800 text-white w-48 h-screen fixed flex flex-col items-center"
         style={{ top: 0 }}
       >
-        <nav className="py-4">
+        <div className="py-4 flex flex-col items-center">
+          <img src={logo} alt="Logo" className="w-12 h-12 mb-2" />
+          <h1 className="text-xl font-bold font-[Playfair] text-center">
+            Personal Finance Tracker
+          </h1>
+        </div>
+        <nav className="flex-1 flex flex-col justify-center ">
           <ul className="flex flex-col space-y-4">
             <li>
               <Link
@@ -71,7 +78,7 @@ export function NavLayout() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 bg-gray-100 p-0 ml-48">
+      <main className="flex-1 bg-[#7CA5B8] p-0 ml-48">
         <Outlet />
       </main>
     </div>

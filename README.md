@@ -1,78 +1,70 @@
-### **Project: Personal Finance Tracker**
+# Personal Finance Tracker
 
-### **Project Overview:**
+A web application built with Vite, React, and TypeScript to help users manage their finances. The app provides insights into income, expenses, and savings goals with interactive charts and a clean, user-friendly dashboard.
 
-The Personal Finance Tracker project involves designing and developing a comprehensive application for tracking personal income, expenses, and savings goals. This project provides hands-on experience in building custom hooks, applying advanced React methodologies, and styling with Tailwind CSS. Participants will also leverage GitHub Copilot to enhance coding productivity and efficiency.
+## Features
 
-### **Key Features:**
+### Dashboard
 
-#### **UI/UX Design:**
+- Provides a summary of income, expenses, and savings.
+- Displays recent transactions for a quick overview.
 
-- **Responsive Design:** Ensure the application is responsive and visually appealing across various devices.
-- **User-Friendly Interface:** Design intuitive and easy-to-navigate interfaces.
+### Income Management
 
-#### **Custom Hooks:**
+- Add or remove income sources.
+- View source contribution with a pie chart.
+- Analyze past 3 months' total income with a line graph.
+- Access income history and specific source history.
 
-- **Reusability:** Create custom hooks to encapsulate and reuse logic across components.
-- **Separation of Concerns:** Ensure better separation of concerns and a cleaner codebase.
+### Expense Tracking
 
-#### **Advanced React Methodologies:**
+- Categorize expenses and add/remove categories.
+- Visualize category contributions with a pie chart.
+- Compare past 3 months' total expenses with a line graph.
+- Access expense history and specific category history.
 
-- **Code Splitting:** Implement code splitting to optimize application performance.
-- **Lazy Loading:** Use React's lazy loading for components to improve initial load times.
-- **Error Boundaries:** Implement error boundaries to handle errors gracefully.
+### Savings Goals
 
-#### **Styling with Tailwind CSS:**
+- Displays remaining funds calculated as `Income - Expenses`.
+- Manage savings goals:
+  - View goals with name, target amount, current amount, and time left.
+  - Add specified amounts to goals.
+  - Create new goals, edit existing goals, or delete goals.
 
-- **Utility-First CSS:** Use Tailwind CSS for rapidly building custom designs.
-- **Responsive Utilities:** Apply Tailwind's responsive utilities for a mobile-first design approach.
+## Technologies Used
 
-#### **GitHub Copilot Assistance:**
+- **Vite**: Development environment for blazing-fast builds.
+- **React + TypeScript**: Component-based frontend framework.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **Chart.js**: Data visualization library for charts.
 
-- **Code Suggestions:** Utilize GitHub Copilot for generating code snippets and suggestions.
-- **Enhanced Productivity:** Leverage Copilot's AI capabilities to improve coding efficiency.
+## Lessons Learned
 
-### **Project Structure:**
+- Managing state with Redux, including slices and reducers.
+- Effectively using Tailwind CSS for responsive designs.
+- Handling complex states and asynchronous data in React.
 
-#### **1. Setup and Initialization:**
+## How to Run This Project Locally
 
-- **Initialize Project:** Set up a new React project using Create React App or Vite.
-- **Install Dependencies:** Install necessary dependencies including Tailwind CSS and any other libraries.
+To clone and run this project on your local machine, follow these steps:
 
-#### **2. UI/UX Design:**
+1. Open your terminal.
+2. Clone the public repository:
 
-- **Layout Design:** Design the main layout including dashboard, income, expenses, and savings goal pages.
-- **CSS Styling:** Apply Tailwind CSS for styling the application, ensuring responsiveness.
+   ```bash
+   git clone https://github.com/Sulav-Malla/Personal-Finance-Tracker
+   ```
 
-#### **3. Custom Hooks:** (optional)
+3. Install the dependencies:
 
-- **Create Hooks:** Develop custom hooks for encapsulating reusable logic (e.g., `useFetchTransactions`, `useIncome`, `useExpenses`).
-- **Utilize Hooks:** Use custom hooks within components to manage state and side effects.
+   ```bash
+   npm install
+   ```
 
-#### **4. Advanced React Methodologies:**
+4. Start the development server:
 
-- **Code Splitting:** Implement code splitting using React's `React.lazy` and `Suspense`.
-- **Lazy Loading:** Lazy load components to improve initial load times.
-- **Error Boundaries:** Create error boundaries to catch and handle errors gracefully.
+   ```bash
+   npm run dev
+   ```
 
-#### **5. Key Features Implementation:**
-
-- **Income Management:** Allow users to input and categorize income sources.
-- **Expense Tracking:** Enable users to log and categorize expenses.
-- **Savings Goals:** Allow users to set and track progress towards savings goals.
-- **Financial Overview:** Provide a dashboard with a summary of income, expenses, and savings.
-- **Data Visualization:** Use charts and graphs to visualize financial data.
-
-#### **6. GitHub Copilot Assistance:**
-
-- **Code Generation:** Utilize GitHub Copilot for code suggestions and generation.
-- **Productivity Enhancements:** Implement Copilot's suggestions to enhance coding productivity.
-
-#### **7. Documentation:**
-
-- **README File:** Provide clear instructions for setting up and running the application.
-- **API Documentation:** Document the usage of custom hooks and advanced React methodologies.
-
-## Note:
-
-Please make the use of the Context API to handle the state management. A better UI can be created to get a good grasp on the UI materials covered.
+5. Open your browser and go to local link to view the website.

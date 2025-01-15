@@ -11,7 +11,7 @@ interface IIncomeHistory {
   id: string;
   date: string;
   amount: number;
-  source: string;
+  sourceId: string;
 }
 
 interface IIncomeState {
@@ -34,9 +34,9 @@ const initialState: IIncomeState = {
     { id: "3", type: "Investments", amount: 500, recurring: true },
   ],
   incomeHistory: [
-    { id: "1", date: "2023-10-01", amount: 3000, source: "Salary" },
-    { id: "2", date: "2023-10-15", amount: 1500, source: "Freelance" },
-    { id: "3", date: "2023-10-20", amount: 500, source: "Investments" },
+    { id: "1", date: "2023-10-01", amount: 3000, sourceId: "1" },
+    { id: "2", date: "2023-10-15", amount: 1500, sourceId: "2" },
+    { id: "3", date: "2023-10-20", amount: 500, sourceId: "3" },
   ],
 };
 
@@ -44,47 +44,51 @@ const incomeSlice = createSlice({
   name: "income",
   initialState,
   reducers: {
-    setTotalIncome(state, action: PayloadAction<number>) {
-      state.totalIncome = action.payload;
-    },
-    setMonthlyComparison(
-      state,
-      action: PayloadAction<{ month: string; amount: number }[]>
-    ) {
-      state.monthlyComparison = action.payload;
-    },
-    setIncomeSources(state, action: PayloadAction<IIncomeSource[]>) {
-      state.incomeSources = action.payload;
-    },
     addIncomeSource(state, action: PayloadAction<IIncomeSource>) {
       state.incomeSources.push(action.payload);
+      state.totalIncome += action.payload.amount;
     },
     removeIncomeSource(state, action: PayloadAction<string>) {
       state.incomeSources = state.incomeSources.filter(
         (source) => source.id !== action.payload
       );
-    },
-    setIncomeHistory(state, action: PayloadAction<IIncomeHistory[]>) {
-      state.incomeHistory = action.payload;
+      state.incomeHistory = state.incomeHistory.filter(
+        (history) => history.sourceId !== action.payload
+      );
     },
     addIncomeHistory(state, action: PayloadAction<IIncomeHistory>) {
       state.incomeHistory.push(action.payload);
+      state.totalIncome += action.payload.amount;
+      const source = state.incomeSources.find(
+        (source) => source.id === action.payload.sourceId
+      );
+      if (source) {
+        source.amount += action.payload.amount;
+      }
     },
     removeIncomeHistory(state, action: PayloadAction<string>) {
-      state.incomeHistory = state.incomeHistory.filter(
-        (history) => history.id !== action.payload
+      const historyToRemove = state.incomeHistory.find(
+        (history) => history.id === action.payload
       );
+      if (historyToRemove) {
+        state.totalIncome -= historyToRemove.amount;
+        state.incomeHistory = state.incomeHistory.filter(
+          (history) => history.id !== action.payload
+        );
+        const source = state.incomeSources.find(
+          (source) => source.id === historyToRemove.sourceId
+        );
+        if (source) {
+          source.amount -= historyToRemove.amount;
+        }
+      }
     },
   },
 });
 
 export const {
-  setTotalIncome,
-  setMonthlyComparison,
-  setIncomeSources,
   addIncomeSource,
   removeIncomeSource,
-  setIncomeHistory,
   addIncomeHistory,
   removeIncomeHistory,
 } = incomeSlice.actions;

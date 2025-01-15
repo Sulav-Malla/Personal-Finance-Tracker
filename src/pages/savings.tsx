@@ -1,3 +1,9 @@
+import SavingsManagement from "../components/SavingsGoals/saving-goal";
+
 export function Savings() {
-  return <div>I'm saving goals</div>;
+  return (
+    <div>
+      <SavingsManagement />
+    </div>
+  );
 }

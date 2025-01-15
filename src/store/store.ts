@@ -2,12 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import dashboardSlice from "../slices/dashboard-slice";
 import incomeSlice from "../slices/income-slice";
 import expenseSlice from "../slices/expense-slice";
-
+import savingsSlice from "../slices/savings-slice";
 export const store = configureStore({
   reducer: {
     dashboard: dashboardSlice,
     income: incomeSlice,
     expenses: expenseSlice,
+    savings: savingsSlice,
   },
 });
 
