@@ -1,7 +1,7 @@
-import dashboardIcon from "../../assets/dashboard.svg";
-import incomeIcon from "../../assets/dollar-sign.svg";
-import expenseIcon from "../../assets/expense.svg";
-import savingIcon from "../../assets/saving-goal.svg";
-import logo from "../../assets/finance-tracker-logo.svg";
+import dashboardIcon from "./dashboard.svg";
+import incomeIcon from "./dollar-sign.svg";
+import expenseIcon from "./expense.svg";
+import savingIcon from "./saving-goal.svg";
+import logo from "./finance-tracker-logo.svg";
 
 export { dashboardIcon, incomeIcon, expenseIcon, savingIcon, logo };

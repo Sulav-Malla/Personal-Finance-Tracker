@@ -1,5 +1,5 @@
-import historyIcon from "../../assets/history-icon.svg";
-import deleteIcon from "../../assets/delete-icon.svg";
-import addIcon from "../../assets/add-icon.svg";
+import historyIcon from "./history-icon.svg";
+import deleteIcon from "./delete-icon.svg";
+import addIcon from "./add-icon.svg";
 
 export { historyIcon, deleteIcon, addIcon };
