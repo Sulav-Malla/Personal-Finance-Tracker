@@ -12,10 +12,7 @@ export function NavLayout() {
   return (
     <div className="flex min-h-screen">
       {/* Side nav */}
-      <div
-        className="bg-gray-800 text-white w-48 h-screen fixed flex flex-col items-center"
-        style={{ top: 0 }}
-      >
+      <div className="bg-gray-800 text-white w-48 h-full fixed flex flex-col items-center">
         <div className="py-4 flex flex-col items-center">
           <img src={logo} alt="Logo" className="w-12 h-12 mb-2" />
           <h1 className="text-xl font-bold font-[Playfair] text-center">
@@ -81,7 +78,7 @@ export function NavLayout() {
       </div>
 
       {/* Main content */}
-      <main className="flex-1 bg-[#7CA5B8] p-0 ml-48">
+      <main className="flex-1 bg-[#7CA5B8] h-full p-0 ml-48 ">
         <Outlet />
       </main>
     </div>

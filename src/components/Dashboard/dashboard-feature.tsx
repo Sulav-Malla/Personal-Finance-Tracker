@@ -128,9 +128,9 @@ function DashboardFeature() {
       <header className="text-4xl font-bold m-1 p-0 border-0 ml-10 font-[Merriweather]">
         Dashboard Overview
       </header>
-      <div className="flex mt-2">
+      <div className="flex mt-2 sm:flex-col sm:ml-10 lg:flex-row">
         {/* Income Card */}
-        <div className="bg-white w-[540px] h-[300px] rounded-[30px] m-1 ml-10 p-4 flex justify-between">
+        <div className="bg-white w-[540px] h-[300px] rounded-[30px] m-1 p-4 flex justify-between">
           <div className="flex flex-col">
             <div className="flex items-center">
               <img
@@ -259,9 +259,9 @@ function DashboardFeature() {
           </div>
         </div>
       </div>
-      <div className="flex mt-2">
+      <div className="flex mt-2 sm:flex-col sm:ml-10 lg:flex-row">
         {/* Savings Card */}
-        <div className="bg-white w-[540px] h-[300px] rounded-[30px] m-1 ml-10 p-4">
+        <div className="bg-white w-[540px] h-[300px] rounded-[30px] m-1  p-4">
           <div className="flex items-center">
             <img
               src={totalSavings}
