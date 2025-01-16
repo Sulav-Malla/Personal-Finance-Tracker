@@ -1,9 +1,11 @@
 import SavingsManagement from "../components/SavingsGoals/saving-goal";
 
-export function Savings() {
+function Savings() {
   return (
     <div>
       <SavingsManagement />
     </div>
   );
 }
+
+export default Savings;

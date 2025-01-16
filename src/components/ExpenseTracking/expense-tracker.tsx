@@ -42,7 +42,9 @@ import {
   secondMedalIcon,
   thirdMedalIcon,
   otherMedalIcon,
-} from "../../assets/medalIcons";
+  confirmIcon,
+  cancelIcon,
+} from "../../assets/medal-feature-icons";
 
 ChartJS.register(
   CategoryScale,
@@ -569,18 +571,15 @@ function ExpenseManagement() {
             />
           </div>
           <div className="flex gap-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Add
+            <button type="submit" className="text-white rounded">
+              <img src={confirmIcon} className="h-8 w-8" />
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className=" text-white rounded"
             >
-              Cancel
+              <img src={cancelIcon} className="h-8 w-8" />
             </button>
           </div>
         </form>

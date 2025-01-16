@@ -1,9 +1,11 @@
 import ExpenseManagement from "../components/ExpenseTracking/expense-tracker";
 
-export function Expenses() {
+function Expenses() {
   return (
     <div>
       <ExpenseManagement />
     </div>
   );
 }
+
+export default Expenses;

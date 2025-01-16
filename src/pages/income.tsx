@@ -1,10 +1,11 @@
-import React from "react";
 import IncomeManagement from "../components/IncomeManagement/income-management";
 
-export const Income = () => {
+function Income() {
   return (
     <div>
       <IncomeManagement />
     </div>
   );
-};
+}
+
+export default Income;

@@ -6,7 +6,9 @@ import goalNameIcon from "./goal-name-icon.svg";
 import remainingFundsIcon from "./remaining-funds-icon.svg";
 import deleteIcon from "./delete-icon.svg";
 import editIcon from "./edit-icon.svg";
-
+import addAmountIcon from "./add-amount-icon.svg";
+import doneIcon from "./done-icon.svg";
+import addGoalIcon from "./add-icon.svg";
 export {
   editIcon,
   deleteIcon,
@@ -16,4 +18,7 @@ export {
   goalNameIcon,
   targetAmountIcon,
   timeLeftIcon,
+  addAmountIcon,
+  doneIcon,
+  addGoalIcon,
 };

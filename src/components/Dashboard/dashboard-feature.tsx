@@ -104,7 +104,14 @@ function DashboardFeature() {
   };
 
   const possibleSavings = income.totalIncome - expenses.totalExpense;
-  const top2Goals = savings.savingsGoals.slice(0, 2);
+
+  const incompleteGoals = savings.savingsGoals.filter(
+    (goal) => goal.currentAmount < goal.targetAmount
+  );
+  const top2Goals =
+    incompleteGoals.length > 0
+      ? incompleteGoals.slice(0, 2)
+      : savings.savingsGoals.slice(0, 2);
 
   const calculateProgress = (currentAmount: number, targetAmount: number) => {
     return (currentAmount / targetAmount) * 100;
@@ -269,7 +276,7 @@ function DashboardFeature() {
               className="w-10 h-10 mr-2"
             />
             <h2 className="text-2xl font-bold font-[Playfair]">
-              Possible Savings
+              Remaining Balance
             </h2>
           </div>
           <div className="flex flex-row mt-4">
@@ -283,7 +290,7 @@ function DashboardFeature() {
               alt="Savings Progress"
               className="w-8 h-8 mr-2"
             />
-            <h3 className="text-xl font-bold font-[Playfair]">Goals</h3>
+            <h3 className="text-xl font-bold font-[Playfair]">Your Goals</h3>
           </div>
           <ul className="font-[Roboto]">
             {top2Goals.map((goal, index) => (

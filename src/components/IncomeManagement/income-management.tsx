@@ -27,7 +27,9 @@ import {
   secondMedalIcon,
   thirdMedalIcon,
   otherMedalIcon,
-} from "../../assets/medalIcons";
+  confirmIcon,
+  cancelIcon,
+} from "../../assets/medal-feature-icons";
 import {
   pointIcon,
   investSource,
@@ -67,6 +69,9 @@ function IncomeManagement() {
     amount: 0,
     type: "",
   });
+  const [showAddHistoryForm, setShowAddHistoryForm] = useState<string | null>(
+    null
+  );
 
   const handleAddIncomeSource = () => {
     setShowForm(true);
@@ -103,6 +108,7 @@ function IncomeManagement() {
       amount: 0,
       type: "",
     });
+    setShowAddHistoryForm(null);
   };
 
   const handleRemoveIncomeHistory = (id: string, amount: number) => {
@@ -416,55 +422,78 @@ function IncomeManagement() {
                           </li>
                         ))}
                     </ul>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleAddIncomeHistory(source.type);
-                      }}
-                      className="mt-4"
-                    >
-                      <h4 className="text-lg font-bold font-[Playfair]">
-                        Add Income History
-                      </h4>
-                      <div className="mb-4">
-                        <label className="block text-sm font-semibold">
-                          Date
-                        </label>
-                        <input
-                          type="date"
-                          value={newIncomeHistory.date}
-                          onChange={(e) =>
-                            setNewIncomeHistory({
-                              ...newIncomeHistory,
-                              date: e.target.value,
-                            })
-                          }
-                          className="border p-2 w-full rounded"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label className="block text-sm font-semibold">
-                          Amount
-                        </label>
-                        <input
-                          type="number"
-                          value={newIncomeHistory.amount}
-                          onChange={(e) =>
-                            setNewIncomeHistory({
-                              ...newIncomeHistory,
-                              amount: parseFloat(e.target.value),
-                            })
-                          }
-                          className="border p-2 w-full rounded"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                    {showAddHistoryForm === source.id ? (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleAddIncomeHistory(source.type);
+                        }}
+                        className="mt-4"
                       >
-                        Add
+                        <h4 className="text-xl font-bold font-[Playfair] mt-4 mb-2">
+                          Add Income History
+                        </h4>
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Date
+                          </label>
+                          <input
+                            type="date"
+                            value={newIncomeHistory.date}
+                            onChange={(e) =>
+                              setNewIncomeHistory({
+                                ...newIncomeHistory,
+                                date: e.target.value,
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Amount
+                          </label>
+                          <input
+                            type="number"
+                            value={newIncomeHistory.amount}
+                            onChange={(e) =>
+                              setNewIncomeHistory({
+                                ...newIncomeHistory,
+                                amount: parseFloat(e.target.value),
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          />
+                        </div>
+                        <div className="flex">
+                          <button
+                            type="submit"
+                            className=" text-white mr-2 rounded"
+                          >
+                            <img src={confirmIcon} className="h-8 w-8" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setShowAddHistoryForm(null)}
+                            className=" text-white rounded"
+                          >
+                            <img src={cancelIcon} className="h-8 w-8" />
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <button
+                        onClick={() => setShowAddHistoryForm(source.id)}
+                        className="mt-4 text-black px-4 py-2 rounded flex items-center"
+                      >
+                        <img
+                          src={addIcon}
+                          alt="Add Icon"
+                          className="w-5 h-5 mr-2"
+                        />
+                        Add Income History
                       </button>
-                    </form>
+                    )}
                   </div>
                 )}
               </li>
@@ -525,18 +554,15 @@ function IncomeManagement() {
             />
           </div>
           <div className="flex gap-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Add
+            <button type="submit" className="text-white rounded">
+              <img src={confirmIcon} className="h-8 w-8" />
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="text-white rounded"
             >
-              Cancel
+              <img src={cancelIcon} className="h-8 w-8" />
             </button>
           </div>
         </form>

@@ -8,6 +8,7 @@ import {
   setRemainingFunds,
   updateRemainingFunds,
   editSavingsGoal,
+  addToRemainingFunds,
 } from "../../slices/savings-slice";
 
 import {
@@ -19,6 +20,9 @@ import {
   goalNameIcon,
   targetAmountIcon,
   timeLeftIcon,
+  addAmountIcon,
+  doneIcon,
+  addGoalIcon,
 } from "../../assets/savingAssets";
 
 interface ISavingsGoal {
@@ -85,8 +89,9 @@ function SavingsManagement() {
     setShowForm(false);
   };
 
-  const handleRemoveSavingsGoal = (id: string) => {
+  const handleRemoveSavingsGoal = (id: string, amount: number) => {
     dispatch(removeSavingsGoal(id));
+    dispatch(addToRemainingFunds(amount));
   };
 
   const handleUpdateSavingsGoal = (id: string, amount: number) => {
@@ -113,6 +118,12 @@ function SavingsManagement() {
     setShowForm(true);
   };
 
+  const handleCancelEdit = () => {
+    setNewGoal({ name: "", targetAmount: 0, currentAmount: 0, targetDate: "" });
+    setShowForm(false);
+    setEditGoalId(null);
+  };
+
   const calculateProgress = (goal: ISavingsGoal) => {
     return (goal.currentAmount / goal.targetAmount) * 100;
   };
@@ -133,22 +144,58 @@ function SavingsManagement() {
       : "0.00";
   };
 
+  const getProgressColor = (progress: number) => {
+    if (progress <= 30) {
+      return "bg-red-500";
+    } else if (progress > 30 && progress <= 70) {
+      return "bg-yellow-500";
+    }
+    return "bg-green-500";
+  };
+  const getCompletionStatus = (progress: number) => {
+    if (progress === 100) {
+      return true;
+    }
+    return false;
+  };
+
+  const totalCollectedFunds = savings.savingsGoals.reduce(
+    (total, goal) => total + goal.currentAmount,
+    0
+  );
+
   return (
     <div className="p-6 min-h-screen">
       <header className="text-3xl font-bold mb-6 text-gray-800 font-[Merriweather]">
         Savings Goals
       </header>
 
-      <div className="mb-6 p-4 bg-blue-100 rounded-lg flex items-center">
-        <img
-          src={remainingFundsIcon}
-          alt="Remaining Funds Icon"
-          className="w-8 h-8 mr-4"
-        />
-        <h2 className="text-3xl font-semibold text-blue-800 font-[Playfair]">
-          Remaining Funds: ${remainingFunds !== null ? remainingFunds : 0}
-        </h2>
+      <div className="mb-4 p-4 bg-blue-100 rounded-lg flex items-center justify-between">
+        <div className="flex items-center">
+          <img
+            src={remainingFundsIcon}
+            alt="Remaining Funds Icon"
+            className="w-8 h-8 mr-4"
+          />
+          <h2 className="text-3xl font-semibold text-blue-800 font-[Playfair]">
+            Remaining Funds: ${remainingFunds !== null ? remainingFunds : 0}
+          </h2>
+        </div>
+        <div>
+          <h2 className="text-3xl font-semibold text-black-800 font-[Playfair] ml-4">
+            Funds Allocated: ${totalCollectedFunds}
+          </h2>
+        </div>
       </div>
+      <button
+        onClick={handleAddSavingsGoal}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-2 flex items-center"
+      >
+        <img src={addGoalIcon} className="h-10, w-10 mr-2" />
+        <span className="text-xl font-[Playfair] text-black font-bold">
+          Add Goal
+        </span>
+      </button>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {savings.savingsGoals.map((goal) => (
@@ -157,46 +204,52 @@ function SavingsManagement() {
               <img
                 src={goalNameIcon}
                 alt="Goal Name Icon"
-                className="w-6 h-6 mr-2"
+                className="w-6 h-6 mr-4"
               />
               {goal.name}
             </h2>
-            <p className="text-lg flex items-center font-[Roboto]">
-              <img
-                src={targetAmountIcon}
-                alt="Target Amount Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Target Amount: ${goal.targetAmount}
-            </p>
-            <p className="text-lg flex items-center font-[Roboto]">
-              <img
-                src={currentAmountIcon}
-                alt="Current Amount Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Current Amount: ${goal.currentAmount}
-            </p>
-            <p className="text-lg flex items-center font-[Roboto]">
-              <img
-                src={targetDateIcon}
-                alt="Target Date Icon"
-                className="w-6 h-6 mr-2"
-              />
-              Target Date: {goal.targetDate}
-            </p>
-            <p className="text-lg flex items-center font-[Roboto]">
+            <div>
+              {" "}
+              {/* come back change color */}
+              <p className="text-lg flex items-center font-[Roboto]">
+                <img
+                  src={targetAmountIcon}
+                  alt="Target Amount Icon"
+                  className="w-6 h-6 mr-4"
+                />
+                Target Amount: ${goal.targetAmount}
+              </p>
+              <p className="text-lg flex items-center font-[Roboto]">
+                <img
+                  src={currentAmountIcon}
+                  alt="Current Amount Icon"
+                  className="w-6 h-6 mr-4"
+                />
+                Current Amount: ${goal.currentAmount}
+              </p>
+              <p className="text-lg flex items-center font-[Roboto]">
+                <img
+                  src={targetDateIcon}
+                  alt="Target Date Icon"
+                  className="w-6 h-6 mr-4"
+                />
+                Target Date: {goal.targetDate}
+              </p>
+            </div>
+            <p className="text-lg flex items-center font-[Roboto] mt-4">
               <img
                 src={timeLeftIcon}
                 alt="Time Left Icon"
-                className="w-6 h-6 mr-2"
+                className="w-6 h-6 mr-4"
               />
               {calculateTimeLeft(goal.targetDate)}
             </p>
             <div className="my-4">
               <div className="bg-gray-200 h-2 rounded">
                 <div
-                  className="bg-blue-500 h-2 rounded"
+                  className={`${getProgressColor(
+                    calculateProgress(goal)
+                  )} h-2 rounded`}
                   style={{ width: `${calculateProgress(goal)}%` }}
                 ></div>
               </div>
@@ -214,49 +267,78 @@ function SavingsManagement() {
               >
                 <img src={editIcon} alt="Edit Icon" className="w-5 h-5" />
               </button>
-              <button
-                onClick={() => handleRemoveSavingsGoal(goal.id)}
-                className="text-white px-3 py-1 rounded"
-              >
-                <img src={deleteIcon} alt="Delete Icon" className="w-5 h-5" />
-              </button>
+              {getCompletionStatus(calculateProgress(goal)) ? (
+                <button
+                  onClick={() => handleRemoveSavingsGoal(goal.id, 0)}
+                  className="text-white px-3 py-1 rounded"
+                >
+                  <img src={deleteIcon} alt="Delete Icon" className="w-5 h-5" />
+                </button>
+              ) : (
+                <button
+                  onClick={() =>
+                    handleRemoveSavingsGoal(goal.id, goal.currentAmount)
+                  }
+                  className="text-white px-3 py-1 rounded"
+                >
+                  <img src={deleteIcon} alt="Delete Icon" className="w-5 h-5" />
+                </button>
+              )}
             </div>
-            <div className="mt-4">
-              <input
-                type="number"
-                value={contributionAmounts[goal.id] || ""}
-                onChange={(e) =>
-                  setContributionAmounts({
-                    ...contributionAmounts,
-                    [goal.id]: parseFloat(e.target.value),
-                  })
-                }
-                className="border p-2 w-full rounded mb-2 font-[Roboto]"
-                placeholder="Enter amount to add"
+            {getCompletionStatus(calculateProgress(goal)) ? (
+              <img
+                src={doneIcon}
+                alt="Add Amount"
+                className="h-20 w-20 mx-auto"
               />
-              <button
-                onClick={() =>
-                  handleUpdateSavingsGoal(
-                    goal.id,
-                    contributionAmounts[goal.id] || 0
-                  )
-                }
-                className="text-white bg-green-500 px-3 py-1 rounded"
-                disabled={(contributionAmounts[goal.id] || 0) > remainingFunds}
-              >
-                Add Amount
-              </button>
-            </div>
+            ) : (
+              <div className="mt-4">
+                <input
+                  type="number"
+                  value={contributionAmounts[goal.id] || ""}
+                  onChange={(e) =>
+                    setContributionAmounts({
+                      ...contributionAmounts,
+                      [goal.id]: parseFloat(e.target.value),
+                    })
+                  }
+                  className="border p-2 w-full rounded mb-2 font-[Roboto]"
+                  placeholder="Enter amount to add"
+                />
+
+                <button
+                  onClick={() =>
+                    handleUpdateSavingsGoal(
+                      goal.id,
+                      contributionAmounts[goal.id] || 0
+                    )
+                  }
+                  className={`text-black bg-green-400 px-3 py-1 rounded flex ${
+                    (contributionAmounts[goal.id] || 0) > remainingFunds ||
+                    (contributionAmounts[goal.id] || 0) >
+                      goal.targetAmount - goal.currentAmount
+                      ? "cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={
+                    (contributionAmounts[goal.id] || 0) > remainingFunds ||
+                    (contributionAmounts[goal.id] || 0) >
+                      goal.targetAmount - goal.currentAmount
+                  }
+                >
+                  <img
+                    src={addAmountIcon}
+                    alt="Add Amount"
+                    className="h-5 w-5 mr-2"
+                  />
+
+                  <span>Add</span>
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
-
-      <button
-        onClick={handleAddSavingsGoal}
-        className="mt-6 bg-green-500 text-white px-4 py-2 rounded"
-      >
-        Add Savings Goal
-      </button>
 
       {showForm && (
         <form
@@ -320,12 +402,21 @@ function SavingsManagement() {
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            {editGoalId ? "Save Changes" : "Add Goal"}
-          </button>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              {editGoalId ? "Save Changes" : "Add Goal"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="bg-gray-500 text-white px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
     </div>
