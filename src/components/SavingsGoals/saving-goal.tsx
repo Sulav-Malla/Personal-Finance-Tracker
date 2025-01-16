@@ -127,6 +127,11 @@ function SavingsManagement() {
   const calculateProgress = (goal: ISavingsGoal) => {
     return (goal.currentAmount / goal.targetAmount) * 100;
   };
+  const isFormValid =
+    newGoal.name.trim() !== "" &&
+    newGoal.targetAmount > 0 &&
+    newGoal.currentAmount >= 0 &&
+    newGoal.targetDate !== "";
 
   const calculateTimeLeft = (targetDate: string) => {
     const target = new Date(targetDate);
@@ -189,7 +194,7 @@ function SavingsManagement() {
       </div>
       <button
         onClick={handleAddSavingsGoal}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-2 flex items-center"
+        className="bg-green-400 text-white px-4 py-2 rounded mb-2 flex items-center"
       >
         <img src={addGoalIcon} className="h-10, w-10 mr-2" />
         <span className="text-xl font-[Playfair] text-black font-bold">
@@ -342,12 +347,19 @@ function SavingsManagement() {
 
       {showForm && (
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            // Check if it's Add Goal and if form is valid
+            if (editGoalId || isFormValid) {
+              handleFormSubmit(e); // Only submit if valid or in "edit" mode
+            }
+          }}
           className="bg-gray-50 mt-6 p-6 rounded shadow-lg"
         >
           <h3 className="text-2xl font-semibold mb-6 text-gray-800 font-[Playfair]">
             {editGoalId ? "Edit" : "Add"} Savings Goal
           </h3>
+
           <div className="mb-4">
             <label className="block text-lg font-[Roboto]">Goal Name</label>
             <input
@@ -358,6 +370,7 @@ function SavingsManagement() {
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-lg font-[Roboto]">Target Amount</label>
             <input
@@ -373,6 +386,7 @@ function SavingsManagement() {
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-lg font-[Roboto]">
               Current Amount
@@ -390,6 +404,7 @@ function SavingsManagement() {
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
+
           <div className="mb-4">
             <label className="block text-lg font-[Roboto]">Target Date</label>
             <input
@@ -402,10 +417,16 @@ function SavingsManagement() {
               className="border p-2 w-full rounded font-[Roboto]"
             />
           </div>
+
           <div className="flex gap-4">
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className={`bg-blue-500 text-white px-4 py-2 rounded ${
+                !isFormValid && !editGoalId
+                  ? "cursor-not-allowed opacity-50"
+                  : ""
+              }`}
+              disabled={!isFormValid && !editGoalId} // Disable if invalid
             >
               {editGoalId ? "Save Changes" : "Add Goal"}
             </button>

@@ -23,7 +23,17 @@ import {
   ArcElement,
 } from "chart.js";
 
-import { historyIcon, deleteIcon, addIcon } from "../../assets/featureIcons";
+import {
+  historyIcon,
+  deleteIcon,
+  addIcon,
+  confirmIcon,
+  cancelIcon,
+  firstMedalIcon,
+  secondMedalIcon,
+  thirdMedalIcon,
+  otherMedalIcon,
+} from "../../assets/featureIcons";
 
 import {
   transportationIcon,
@@ -37,14 +47,6 @@ import {
   entertainExpense,
 } from "../../assets/expenseAssets";
 import monthIcons from "../../assets/monthIcons";
-import {
-  firstMedalIcon,
-  secondMedalIcon,
-  thirdMedalIcon,
-  otherMedalIcon,
-  confirmIcon,
-  cancelIcon,
-} from "../../assets/medal-feature-icons";
 
 ChartJS.register(
   CategoryScale,
@@ -81,8 +83,8 @@ function ExpenseManagement() {
   });
   const [showHistory, setShowHistory] = useState<string | null>(null);
   const [showAllHistory, setShowAllHistory] = useState(false);
+  const [showCategoryForm, setCategoryForm] = useState(false);
 
-  // Update total expense whenever history changes
   useEffect(() => {
     dispatch(setTotalExpense());
   }, [expenses.history, dispatch]);
@@ -107,6 +109,7 @@ function ExpenseManagement() {
       amount: 0,
     });
     setShowForm(false);
+    setCategoryForm(false);
   };
 
   const handleRemoveExpense = (id: number, amount: number) => {
@@ -114,7 +117,6 @@ function ExpenseManagement() {
     dispatch(addToRemainingFunds(amount));
   };
 
-  // Calculate total amount spent per category
   const categoryTotals = expenses.history.reduce((acc, expense) => {
     if (!acc[expense.category]) {
       acc[expense.category] = 0;
@@ -123,7 +125,6 @@ function ExpenseManagement() {
     return acc;
   }, {} as Record<string, number>);
 
-  // Get the top 3 expense categories
   const top3Categories = Object.entries(categoryTotals)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3)
@@ -189,6 +190,11 @@ function ExpenseManagement() {
   };
 
   const last3Months = expenses.monthlyComparison.slice(-3).reverse();
+  const isFormValid =
+    !!newExpense.date &&
+    !!newExpense.description.trim() &&
+    newExpense.amount > 0 &&
+    !!newExpense.paymentMethod;
 
   return (
     <div className="p-6 min-h-screen">
@@ -387,40 +393,184 @@ function ExpenseManagement() {
                   </button>
                 </div>
                 {showHistory === category && (
-                  <ul className="mt-4 space-y-2 list-disc list-inside">
-                    {expenses.history
-                      .filter((expense) => expense.category === category)
-                      .map((expense) => (
-                        <li
-                          key={expense.id}
-                          className="flex justify-between items-center"
-                        >
-                          <span className="flex-1">
-                            <img
-                              src={pointIcon}
-                              alt="Point Icon"
-                              className="w-4 h-4 inline mr-2"
-                            />
-                            {expense.date} - {expense.description}
-                          </span>
-                          <span className="text-center w-24 mr-10">
-                            ${expense.amount}
-                          </span>
-                          <button
-                            onClick={() =>
-                              handleRemoveExpense(expense.id, expense.amount)
-                            }
-                            className="text-white px-2 py-1 rounded"
+                  <div>
+                    <ul className="mt-4 space-y-2 list-disc list-inside">
+                      {expenses.history
+                        .filter((expense) => expense.category === category)
+                        .map((expense) => (
+                          <li
+                            key={expense.id}
+                            className="flex justify-between items-center"
                           >
-                            <img
-                              src={deleteIcon}
-                              alt="Delete Icon"
-                              className="w-5 h-5"
-                            />
+                            <span className="flex-1">
+                              <img
+                                src={pointIcon}
+                                alt="Point Icon"
+                                className="w-4 h-4 inline mr-2"
+                              />
+                              {expense.date} - {expense.description}
+                            </span>
+                            <span className="text-center w-24 mr-10">
+                              ${expense.amount}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleRemoveExpense(expense.id, expense.amount)
+                              }
+                              className="text-white px-2 py-1 rounded"
+                            >
+                              <img
+                                src={deleteIcon}
+                                alt="Delete Icon"
+                                className="w-5 h-5"
+                              />
+                            </button>
+                          </li>
+                        ))}
+                    </ul>
+
+                    {/* New Expense Form Section */}
+                    {showCategoryForm ? (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+
+                          if (!isFormValid) return; // Prevent submission if the form is invalid.
+
+                          const newExpenseData = {
+                            id: Date.now(),
+                            date: newExpense.date,
+                            description: newExpense.description.trim(),
+                            category: category, // Automatically uses the current category
+                            paymentMethod:
+                              newExpense.paymentMethod || paymentChoices[0], // Default to "Credit Card"
+                            amount: newExpense.amount,
+                          };
+
+                          dispatch(addExpense(newExpenseData));
+                          setNewExpense({
+                            date: "",
+                            description: "",
+                            paymentMethod: paymentChoices[0], // Reset to default payment method
+                            category: categories[0],
+                            amount: 0,
+                          });
+                          setCategoryForm(false);
+                        }}
+                        className="mt-6 p-4 bg-gray-100 rounded-lg shadow-sm"
+                      >
+                        <h3 className="text-lg font-semibold mb-4">
+                          Add New History Entry
+                        </h3>
+
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Date
+                          </label>
+                          <input
+                            type="date"
+                            value={newExpense.date}
+                            onChange={(e) =>
+                              setNewExpense({
+                                ...newExpense,
+                                date: e.target.value,
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Description
+                          </label>
+                          <input
+                            type="text"
+                            value={newExpense.description}
+                            onChange={(e) =>
+                              setNewExpense({
+                                ...newExpense,
+                                description: e.target.value,
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Amount
+                          </label>
+                          <input
+                            type="number"
+                            value={newExpense.amount}
+                            onChange={(e) =>
+                              setNewExpense({
+                                ...newExpense,
+                                amount: parseFloat(e.target.value) || 0,
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <label className="block text-sm font-semibold">
+                            Payment Method
+                          </label>
+                          <select
+                            value={newExpense.paymentMethod}
+                            onChange={(e) =>
+                              setNewExpense({
+                                ...newExpense,
+                                paymentMethod: e.target.value,
+                              })
+                            }
+                            className="border p-2 w-full rounded"
+                          >
+                            {paymentChoices.map((choice) => (
+                              <option key={choice} value={choice}>
+                                {choice}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="flex gap-4">
+                          <button
+                            type="submit"
+                            disabled={!isFormValid}
+                            className={`text-white rounded ${
+                              isFormValid
+                                ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                                : "bg-gray-300 cursor-not-allowed"
+                            }`}
+                          >
+                            <img src={confirmIcon} className="h-8 w-8" />
                           </button>
-                        </li>
-                      ))}
-                  </ul>
+                          <button
+                            type="button"
+                            onClick={() => setCategoryForm(false)}
+                            className="text-white rounded"
+                          >
+                            <img src={cancelIcon} className="h-8 w-8" />
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <button
+                        onClick={() => setCategoryForm(true)}
+                        className="mt-4 text-black px-4 py-2 rounded flex items-center"
+                      >
+                        <img
+                          src={addIcon}
+                          alt="Add Icon"
+                          className="w-5 h-5 mr-2"
+                        />
+                        Add Expense History
+                      </button>
+                    )}
+                  </div>
                 )}
               </li>
             );
@@ -494,7 +644,13 @@ function ExpenseManagement() {
 
       {showForm && (
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            if (!isFormValid) return; // Extra safeguard to prevent invalid submission
+
+            handleFormSubmit; // Call your form submission logic
+          }}
           className="bg-gray-50 mt-6 p-6 rounded shadow"
         >
           <h3 className="text-lg font-semibold mb-2 font-[Playfair]">
@@ -527,9 +683,9 @@ function ExpenseManagement() {
               Payment Method
             </label>
             <select
-              value={newExpense.category}
+              value={newExpense.paymentMethod}
               onChange={(e) =>
-                setNewExpense({ ...newExpense, category: e.target.value })
+                setNewExpense({ ...newExpense, paymentMethod: e.target.value })
               }
               className="border p-2 w-full rounded"
             >
@@ -571,13 +727,21 @@ function ExpenseManagement() {
             />
           </div>
           <div className="flex gap-4">
-            <button type="submit" className="text-white rounded">
+            <button
+              type="submit"
+              disabled={!isFormValid}
+              className={`text-white rounded ${
+                isFormValid
+                  ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
               <img src={confirmIcon} className="h-8 w-8" />
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className=" text-white rounded"
+              className="text-white rounded bg-red-500 hover:bg-red-600"
             >
               <img src={cancelIcon} className="h-8 w-8" />
             </button>

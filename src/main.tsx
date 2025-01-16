@@ -6,7 +6,6 @@ import { NavLayout } from "./components/Navigation/layout";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 
-// Lazy load the pages
 const Dashboard = lazy(() => import("./pages/dashboard"));
 const Expenses = lazy(() => import("./pages/expenses"));
 const Income = lazy(() => import("./pages/income"));

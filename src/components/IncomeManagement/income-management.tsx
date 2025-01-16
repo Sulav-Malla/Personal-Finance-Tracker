@@ -8,7 +8,17 @@ import {
   removeIncomeHistory,
 } from "../../slices/income-slice";
 
-import { historyIcon, deleteIcon, addIcon } from "../../assets/featureIcons";
+import {
+  historyIcon,
+  deleteIcon,
+  addIcon,
+  confirmIcon,
+  cancelIcon,
+  firstMedalIcon,
+  secondMedalIcon,
+  thirdMedalIcon,
+  otherMedalIcon,
+} from "../../assets/featureIcons";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -22,14 +32,7 @@ import {
   ArcElement,
 } from "chart.js";
 import monthIcons from "../../assets/monthIcons";
-import {
-  firstMedalIcon,
-  secondMedalIcon,
-  thirdMedalIcon,
-  otherMedalIcon,
-  confirmIcon,
-  cancelIcon,
-} from "../../assets/medal-feature-icons";
+
 import {
   pointIcon,
   investSource,
@@ -179,7 +182,11 @@ function IncomeManagement() {
       },
     },
   };
+  const isFormValid =
+    !!newIncomeHistory.date && // Ensure date is selected
+    newIncomeHistory.amount > 0; // Ensure amount is greater than zero
 
+  const isSourceValid = !!newSource.type && newSource.amount > 0;
   const last3Months = income.monthlyComparison.slice(-3).reverse();
 
   return (
@@ -426,13 +433,17 @@ function IncomeManagement() {
                       <form
                         onSubmit={(e) => {
                           e.preventDefault();
-                          handleAddIncomeHistory(source.type);
+                          if (isFormValid) {
+                            handleAddIncomeHistory(source.type);
+                          }
                         }}
                         className="mt-4"
                       >
                         <h4 className="text-xl font-bold font-[Playfair] mt-4 mb-2">
                           Add Income History
                         </h4>
+
+                        {/* Date Field */}
                         <div className="mb-4">
                           <label className="block text-sm font-semibold">
                             Date
@@ -449,6 +460,8 @@ function IncomeManagement() {
                             className="border p-2 w-full rounded"
                           />
                         </div>
+
+                        {/* Amount Field */}
                         <div className="mb-4">
                           <label className="block text-sm font-semibold">
                             Amount
@@ -465,17 +478,24 @@ function IncomeManagement() {
                             className="border p-2 w-full rounded"
                           />
                         </div>
+
+                        {/* Buttons */}
                         <div className="flex">
                           <button
                             type="submit"
-                            className=" text-white mr-2 rounded"
+                            disabled={!isFormValid}
+                            className={`text-white mr-2 rounded ${
+                              isFormValid
+                                ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                                : "bg-gray-300 cursor-not-allowed"
+                            }`}
                           >
                             <img src={confirmIcon} className="h-8 w-8" />
                           </button>
                           <button
                             type="button"
                             onClick={() => setShowAddHistoryForm(null)}
-                            className=" text-white rounded"
+                            className="text-white rounded bg-red-500 hover:bg-red-600"
                           >
                             <img src={cancelIcon} className="h-8 w-8" />
                           </button>
@@ -511,12 +531,19 @@ function IncomeManagement() {
 
       {showForm && (
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (isSourceValid) {
+              handleFormSubmit;
+            }
+          }}
           className="bg-gray-50 mt-6 p-6 rounded shadow"
         >
           <h3 className="text-lg font-semibold mb-2 font-[Playfair]">
             Add New Income Source
           </h3>
+
+          {/* Source Name Field */}
           <div className="mb-4">
             <label className="block text-sm font-semibold">Source Name</label>
             <input
@@ -528,6 +555,8 @@ function IncomeManagement() {
               className="border p-2 w-full rounded"
             />
           </div>
+
+          {/* Amount Field */}
           <div className="mb-4">
             <label className="block text-sm font-semibold">Amount</label>
             <input
@@ -542,6 +571,8 @@ function IncomeManagement() {
               className="border p-2 w-full rounded"
             />
           </div>
+
+          {/* Recurring Checkbox */}
           <div className="mb-4">
             <label className="block text-sm font-semibold">Recurring</label>
             <input
@@ -553,14 +584,24 @@ function IncomeManagement() {
               className="mr-2"
             />
           </div>
+
+          {/* Buttons */}
           <div className="flex gap-4">
-            <button type="submit" className="text-white rounded">
+            <button
+              type="submit"
+              disabled={!isSourceValid}
+              className={`text-white rounded ${
+                isSourceValid
+                  ? "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
               <img src={confirmIcon} className="h-8 w-8" />
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="text-white rounded"
+              className="text-white rounded bg-red-500 hover:bg-red-600"
             >
               <img src={cancelIcon} className="h-8 w-8" />
             </button>
